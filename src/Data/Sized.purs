@@ -47,6 +47,7 @@ class InfallibleKey f key where
 
 -- | An index into a `Sized` container.
 data Index :: Peano -> Type
-data Index n = Index (forall f a. Sized f n => f a -> a) -- is this really the best way aaa
+data Index n = Index (forall f a. Sized n f => f a -> a) -- is this really the best way aaa
 
-class (InfallibleKey f (Index n)) <= Sized f n
+-- | A `Sized n` container is one which has *at least* `n` elements indexable.
+class (InfallibleKey f (Index n)) <= Sized n f
