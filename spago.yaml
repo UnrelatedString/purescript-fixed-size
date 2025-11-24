@@ -22,7 +22,7 @@ package:
         id: june@sideros.rocks
 workspace:
   packageSet:
-    registry: 63.5.0
+    registry: 68.1.1
   extraPackages:
     my-spec-reporter:
       git: https://github.com/UnrelatedString/my-spec-reporter.git
