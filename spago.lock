@@ -6,11 +6,36 @@
         "core": {
           "dependencies": [
             {
+              "nonempty": ">=7.0.0 <8.0.0"
+            },
+            {
               "prelude": ">=6.0.2 <7.0.0"
             }
           ],
           "build_plan": [
-            "prelude"
+            "bifunctors",
+            "const",
+            "contravariant",
+            "control",
+            "distributive",
+            "either",
+            "exists",
+            "foldable-traversable",
+            "functors",
+            "identity",
+            "invariant",
+            "maybe",
+            "newtype",
+            "nonempty",
+            "orders",
+            "partial",
+            "prelude",
+            "profunctor",
+            "safe-coerce",
+            "tuples",
+            "type-equality",
+            "unfoldable",
+            "unsafe-coerce"
           ]
         },
         "test": {

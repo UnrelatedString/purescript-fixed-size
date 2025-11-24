@@ -3,6 +3,7 @@ package:
   description: Stuff I like to not copy paste whenever I start a new project. Not a real package.
   dependencies:
     - prelude: ">=6.0.2 <7.0.0"
+    - nonempty: ">=7.0.0 <8.0.0"
   test:
     main: Test.Main
     dependencies:
