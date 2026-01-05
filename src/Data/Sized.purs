@@ -8,19 +8,22 @@ module Data.Sized
   , class InfallibleKey
   , itemAt
   , RowKey(..)
+  , class ZipWithVariant
+  , zipWithVariant
   ) where
 
 import Prelude
 import Data.NonEmpty (NonEmpty(..))
 import Prim.Int (class Add)
-import Prim.Row (class Union)
+import Prim.Row (class Cons)
 import Prim.TypeError as TypeError
 import Type.Proxy (Proxy(..))
-import Data.Reflectable (reifyType)
 
 import Data.Homogeneous.Record (Homogeneous, fromHomogeneous)
 import Data.Homogeneous.Variant as Variant
 import Data.Variant as Variant
+import Data.Variant (Variant)
+import Record as Record
 
 -- | The kind of inductively defined non-negative integers at the type level.
 data Peano
@@ -56,8 +59,20 @@ class InfallibleKey f key where
 newtype RowKey :: Row Type -> Type
 newtype RowKey r = RowKey (Variant.Homogeneous r Unit)
 
-instance Union r' unindexed r => InfallibleKey (Homogeneous r) (RowKey r') where
-  itemAt h (RowKey key) = Variant.match (fromHomogeneous $ map const h) $ Variant.fromHomogeneous key
+-- ...okay i could use `expand` from Variant but this is better anyways
+class ZipWithVariant :: Row Type -> Row Type -> Row Type -> Constraint
+class ZipWithVariant rec inp out where
+  zipWithVariant :: Record rec -> Variant inp -> Variant out
+
+instance ZipWithVariant rec () () where
+  zipWithVariant _ = Variant.case_
+else instance
+  ( Cons s a rec' rec
+  , Cons s (a -> b) inp' inp
+  , Cons s b out' out
+  , ZipWithVariant rec inp' out'
+  ) => ZipWithVariant rec inp out where
+  zipWithVariant rec = Variant.overOne (Proxy@s) (flip identity Record.get (Proxy@s) rec) zipWithVariant
 
 -- | An index into a `Sized` container.
 data Index :: Peano -> Type

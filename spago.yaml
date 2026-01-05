@@ -4,6 +4,7 @@ package:
   dependencies:
     - prelude: ">=6.0.2 <7.0.0"
     - nonempty: ">=7.0.0 <8.0.0"
+    - record: ">=4.0.0 <5.0.0"
     - homogeneous: ">=0.4.0 <0.5.0"
     - variant: ">=8.0.0 <9.0.0"
   test:
