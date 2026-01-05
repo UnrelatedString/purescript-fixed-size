@@ -7,12 +7,20 @@ module Data.Sized
   , class Induct
   , class InfallibleKey
   , itemAt
+  , RowKey(..)
   ) where
 
 import Prelude
 import Data.NonEmpty (NonEmpty(..))
 import Prim.Int (class Add)
+import Prim.Row (class Union)
 import Prim.TypeError as TypeError
+import Type.Proxy (Proxy(..))
+import Data.Reflectable (reifyType)
+
+import Data.Homogeneous.Record (Homogeneous, fromHomogeneous)
+import Data.Homogeneous.Variant as Variant
+import Data.Variant as Variant
 
 -- | The kind of inductively defined non-negative integers at the type level.
 data Peano
@@ -40,10 +48,16 @@ else instance TypeError.Fail
   ( TypeError.Text "Tried to convert negative Int or nonstandard Peano"
   ) => IntPeano int peano
 
--- | `Sized` for the more general case of non-integer keys.
+-- | `Sized` for the more general case of non-sequential keys.
 class InfallibleKey :: (Type -> Type) -> Type -> Constraint
 class InfallibleKey f key where
   itemAt :: forall a. f a -> key -> a
+
+newtype RowKey :: Row Type -> Type
+newtype RowKey r = RowKey (Variant.Homogeneous r Unit)
+
+instance Union r' unindexed r => InfallibleKey (Homogeneous r) (RowKey r') where
+  itemAt h (RowKey key) = Variant.match (fromHomogeneous $ map const h) $ Variant.fromHomogeneous key
 
 -- | An index into a `Sized` container.
 data Index :: Peano -> Type
